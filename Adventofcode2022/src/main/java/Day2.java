@@ -9,36 +9,27 @@ public class Day2 {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
         List<String> lines = Files.readAllLines(Path.of(Day2.class.getClassLoader().getResource("day2.txt").toURI()));
-        // A = Rock, B = Paper, C = Scissor
-
         // Task 1
         Map<String, String> bestpick = Map.of("X", "A", "Y", "B", "Z", "C");
-        int point = 0;
-        for (String game : lines) {
-            String opponentHand = game.trim().replace(" ","").substring(0, 1);
-            String ourHand = game.trim().replace(" ","").substring(1, 2);
-            point += getPoint(opponentHand, bestpick.get(ourHand));
-        }
-
-        System.out.println(point);
-
+        System.out.println(lines.stream()
+                .map(line -> line.split(" "))
+                .map(game -> new String[]{game[0], bestpick.get(game[1])})
+                .map(Day2::getPoint)
+                .reduce(0, Integer::sum));
 
         // Task 2
-        // x = lose, y = draw, z = win: Total points?
         List<String> options = List.of("A", "B", "C");
         Map<String, Integer> findIndexForStrategy = Map.of("X", 2, "Y", 0, "Z", 1);
-        int pointT2 = 0;
-        for(String line : lines) {
-            String opponentHand = line.trim().replace(" ","").substring(0, 1);
-            String strategy = line.trim().replace(" ","").substring(1, 2);
+        System.out.println(lines.stream()
+                .map(line -> line.split(" "))
+                .map(game -> new String[]{game[0], options.get((options.indexOf(game[0]) + findIndexForStrategy.get(game[1])) % 3)})
+                .map(Day2::getPoint)
+                .reduce(0, Integer::sum));
+            }
 
-            pointT2 += getPoint(opponentHand, options.get((options.indexOf(opponentHand) + findIndexForStrategy.get(strategy)) % 3));
-        }
-        System.out.println(pointT2);
-
-    }
-
-    public static int getPoint(String opponentHand, String ourHand) {
+    public static int getPoint(String... play) {
+        String opponentHand = play[0];
+        String ourHand = play[1];
 
         int shape = ourHand.equals("A") ? 1 : ourHand.equals("B") ? 2 : 3;
 
