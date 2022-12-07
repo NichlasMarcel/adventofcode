@@ -24,17 +24,32 @@ public class Day6 {
 
         // Task 2
         findDistinctSequenceIndex(14, chars);
+
+        // Task 1
+        findDistinctSequenceIndexMethod2(lines.get(0), 4);
+
+        // Task 2
+        findDistinctSequenceIndexMethod2(lines.get(0), 14);
     }
 
     private static void findDistinctSequenceIndex(int sequenceLength, char[] chars) {
-        for(int i = sequenceLength - 1; i < chars.length; i++) {
+        for (int i = sequenceLength - 1; i < chars.length; i++) {
             Set<Character> set = new HashSet<>();
-            for(int j = i; (i - (sequenceLength - 1) <= j); j--) {
+            for (int j = i; (i - (sequenceLength - 1) <= j); j--) {
                 set.add(chars[j]);
             }
 
-            if(set.size() == sequenceLength) {
-                System.out.println(i+1);
+            if (set.size() == sequenceLength) {
+                System.out.println(i + 1);
+                break;
+            }
+        }
+    }
+
+    private static void findDistinctSequenceIndexMethod2(String line, int sequenceLength) {
+        for (int i = sequenceLength; i < line.length(); i++) {
+            if (Arrays.stream(line.substring(i - sequenceLength, i).split("")).distinct().count() == sequenceLength) {
+                System.out.println(i);
                 break;
             }
         }
