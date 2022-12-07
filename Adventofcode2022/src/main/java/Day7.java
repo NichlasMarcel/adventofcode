@@ -25,9 +25,6 @@ public class Day7 {
             if(line.startsWith("$ cd")) {
                 String folderName = line.replace("$ cd ","");
 
-                if(stack.isEmpty())
-                    continue;
-
                 if(folderName.equals("..")) {
                     stack.pop();
                     continue;
@@ -40,9 +37,7 @@ public class Day7 {
             } else if(line.startsWith("dir")) {
                 String subfolderName = line.replace("dir ","");
                 stack.peek().getSubfolders().put(subfolderName, new SystemFolder(subfolderName, stack.peek()));
-            } else if(line.startsWith("$ ls")) {
-                // Nothing
-            } else {
+            } else if(!line.startsWith("$ ls")) {
                 String[] fileData = line.split(" ");
                 stack.peek().getFiles().add(new SystemFile(fileData[1], Integer.parseInt(fileData[0])));
             }
@@ -58,7 +53,6 @@ public class Day7 {
         // Part2
         int freespacerequired = 30000000 - (70000000 - start.getFolderSize());
         System.out.println(folderSizes.values().stream().filter(i -> i >= freespacerequired).sorted().findFirst().get());
-
     }
 
     public void getFolderSizes(HashMap<String, Integer> map, SystemFolder folder) {
