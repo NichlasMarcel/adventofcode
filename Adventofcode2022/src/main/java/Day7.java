@@ -80,14 +80,6 @@ public class Day7 {
             this.parentFolder = parentFolder;
         }
 
-        public String getFolderName() {
-            return folderName;
-        }
-
-        public SystemFolder getParentFolder() {
-            return parentFolder;
-        }
-
         public HashMap<String, SystemFolder> getSubfolders() {
             return subfolders;
         }
