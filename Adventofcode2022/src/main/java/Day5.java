@@ -2,78 +2,90 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Day5 {
 
     public static void main(String[] args) throws URISyntaxException, IOException {
-        Day5 day4 = new Day5();
-        day4.run();
+        Day5 day5 = new Day5();
+        day5.run();
     }
 
     public void run() throws URISyntaxException, IOException {
-        List<String> lines = Files.readAllLines(Path.of(Day5.class.getClassLoader().getResource("day4.txt").toURI()));
+        List<String> lines = Files.readAllLines(Path.of(Day5.class.getClassLoader().getResource("day5.txt").toURI()));
+
+        // Init map
+        HashMap<Integer, Deque<Character>> stacks = initMap(lines);
 
         // Task 1
+        List<String> moves = lines.subList(10, lines.size());
+
+        for (int i = 0; i < moves.size(); i++) {
+            String[] keepNumers = moves.get(i).replaceAll("[^-?0-9]+", " ").trim().split(" ");
+            int move = Integer.parseInt(keepNumers[0]);
+            int from = Integer.parseInt(keepNumers[1]);
+            int to = Integer.parseInt(keepNumers[2]);
+
+            for (int j = 1; j <= move; j++) {
+                stacks.get(to).push(stacks.get(from).pop());
+            }
+        }
+
+
         System.out.println(
-                lines.stream().map(p -> {
-                    String[] assignmentPair = p.split(",");
-                    return List.of(new Range(assignmentPair[0]), new Range(assignmentPair[1]));
-                }).filter(r -> r.get(0).contain(r.get(1)) || r.get(1).contain(r.get(0))).count()
+                Arrays.toString(stacks.values().stream()
+                        .map(Deque::peek)
+                        .toArray(Character[]::new))
         );
 
         // Task 2
+        stacks = initMap(lines);
+        moves = lines.subList(10, lines.size());
+
+        for (int i = 0; i < moves.size(); i++) {
+            String[] keepNumers = moves.get(i).replaceAll("[^-?0-9]+", " ").trim().split(" ");
+            int move = Integer.parseInt(keepNumers[0]);
+            int from = Integer.parseInt(keepNumers[1]);
+            int to = Integer.parseInt(keepNumers[2]);
+
+            List<Character> reArrange = new ArrayList<>();
+            for (int j = 1; j <= move; j++) {
+                reArrange.add(stacks.get(from).pop());
+            }
+
+            for(int j = reArrange.size() -1; j >= 0; j--) {
+                stacks.get(to).push(reArrange.get(j));
+            }
+        }
+
+
         System.out.println(
-                lines.stream().map(p -> {
-                    String[] assignmentPair = p.split(",");
-                    return List.of(new Range(assignmentPair[0]), new Range(assignmentPair[1]));
-                }).filter(r -> r.get(0).overlap(r.get(1)) || r.get(1).overlap(r.get(0))).count()
+                Arrays.toString(stacks.values().stream()
+                        .map(Deque::peek)
+                        .toArray(Character[]::new))
         );
     }
 
-    public class Range {
-        private int from;
-        private int to;
+    private static HashMap<Integer, Deque<Character>> initMap(List<String> lines) {
+        HashMap<Integer, Deque<Character>> stacks = new HashMap<>();
 
-        public Range() {
+        for (int i = 1; i <= 9; i++) {
+            stacks.put(i, new ArrayDeque<>());
         }
 
-        public Range(String rangeAsString) {
-            String[] range = rangeAsString.split("-");
-            this.from = Integer.parseInt(range[0]);
-            this.to = Integer.parseInt(range[1]);
+        List<String> map = lines.subList(0, 8);
+        for (int c = map.size() - 1; c >= 0; c--) {
+            String s = map.get(c);
+            char[] carr = s.toCharArray();
+            for (int i = 1; i <= 9; i++) {
+                int index = i == 1 ? 1 : ((i - 1) * 4) + 1;
+                if (index < carr.length)
+                    if (Character.isAlphabetic(carr[index]))
+                        stacks.get(i).push(carr[index]);
+            }
         }
 
-        public Range(int from, int to) {
-            this.from = from;
-            this.to = to;
-        }
-
-        public boolean contain(Range other) {
-            return from <= other.from && to >= other.to;
-        }
-
-        public boolean overlap(Range other) {
-            return (from <= other.from && to >= other.from) || (other.from <= from && other.to >= to);
-        }
-
-
-//.234.....  2-4
-//.....678.  6-8
-//
-//.23......  2-3
-//...45....  4-5
-//
-//....567..  5-7
-//......789  7-9
-//
-//.2345678.  2-8
-//..34567..  3-7
-//
-//.....6...  6-6
-//...456...  4-6
-//
-//.23456...  2-6
-//...45678.  4-8
+        return stacks;
     }
 }
