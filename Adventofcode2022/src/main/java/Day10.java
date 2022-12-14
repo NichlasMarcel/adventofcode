@@ -20,15 +20,13 @@ public class Day10 {
     }
 
     private void task(List<String> lines) {
-
         int cycles = 0;
         int registerX = 1;
-
 
         HashMap<Integer, Integer> cyclesAndRegister = new HashMap<>();
         for(int i = 0; i < lines.size(); i++) {
             String instruction = lines.get(i);
-            if(instruction.equals("noop")) {
+            if("noop".equals(instruction)) {
                 cyclesAndRegister.put(++cycles, registerX);
             } else {
                 Integer val = Integer.parseInt(instruction.split(" ")[1]);
