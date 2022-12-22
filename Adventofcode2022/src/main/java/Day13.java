@@ -9,13 +9,6 @@ import java.util.stream.Collectors;
 
 public class Day13 {
 
-    private String testInput =
-            "Sabqponm\n" +
-                    "abcryxxl\n" +
-                    "accszExk\n" +
-                    "acctuvwj\n" +
-                    "abdefghi";
-
     public static void main(String[] args) throws URISyntaxException, IOException {
         Day13 run = new Day13();
         run.run();
