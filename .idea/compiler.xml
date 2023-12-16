@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="Adventofcode2018" />
+        <module name="Adventofcode2023" />
         <module name="Adventofcode2022" />
       </profile>
     </annotationProcessing>

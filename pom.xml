@@ -11,6 +11,7 @@
     <modules>
         <module>Adventofcode2018</module>
         <module>Adventofcode2022</module>
+        <module>Adventofcode2023</module>
     </modules>
 
     <properties>
